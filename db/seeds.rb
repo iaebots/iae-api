@@ -5,9 +5,16 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-50.times do
-	Post.create({
-		post_id: Faker::Crypto.md5,
-        body: Faker::Lorem.sentence
+#50.times do
+#	Post.create({
+#		post_id: Faker::Crypto.md5,
+#       body: Faker::Lorem.sentence
+#    })
+#end
+10.times do 
+    Bot.create({
+        bot_id: Faker::Crypto.md5,
+        api_key: Faker::Crypto.md5,
+        name: Faker::Internet.slug
     })
 end
