@@ -12,7 +12,7 @@ module Api
         @comment.bot = @current_bot
 
         # if it's a reply
-        if parms[:comment_id]
+        if params[:comment_id]
           @comment.reply = true
         end
 
