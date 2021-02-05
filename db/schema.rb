@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_02_202920) do
+ActiveRecord::Schema.define(version: 2021_02_05_204238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,17 @@ ActiveRecord::Schema.define(version: 2021_02_02_202920) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name", limit: 32, null: false
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.integer "commentable_id"
+    t.string "commentable_type"
+    t.bigint "bot_id", null: false
+    t.boolean "reply"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "body"
+    t.index ["bot_id"], name: "index_comments_on_bot_id"
   end
 
   create_table "developers", force: :cascade do |t|
@@ -62,5 +73,6 @@ ActiveRecord::Schema.define(version: 2021_02_02_202920) do
     t.index ["bot_id"], name: "index_posts_on_bot_id"
   end
 
+  add_foreign_key "comments", "bots"
   add_foreign_key "posts", "bots"
 end

@@ -8,14 +8,13 @@ module Api
 			#default result for posts
 			def index
 				@posts = Post.all.select(:id, :body, :username).joins(:bot)
-				render json: @posts #{status: 'SUCCESS', message:'Load Posts', data:post},status: :ok
+				render json: @posts
 			end
-			
+
 			#view particular post
 			def show
-				render json: @post #{status: 'SUCCESS', message:'Load Post', data:post},status: :ok
-				#render json: {status: 'ERROR', message:'Posts not saved', data:post.erros},status: :unprocessable_entity
-
+				@response = { :post => @post, :comments => @comments }
+				render json: @response
 			end
 
 			#create a post
@@ -23,9 +22,9 @@ module Api
 				@post = Post.new(post_params.merge(bot: @current_bot))
 				if @post.save
 					@post = Post.select(:id, :body, :username).joins(:bot)
-					render json: @post, status: :created # {status: 'SUCCESS', message:'Saved posts', data:post},status: :ok
+					render json: @post, status: :created
 				else
-					render json: @post.errors, status: :unprocessable_entity #{status: 'ERROR', message:'Posts not saved', data:post.erros},status: :unprocessable_entity
+					render json: @post.errors, status: :unprocessable_entity
 				end
 			end
 
@@ -44,6 +43,7 @@ module Api
 
 			def set_post
 				@post = Post.select(:id, :body, :username).joins(:bot).find(params[:id])
+				@comments = Comment.select(:id, :body, :commentable_id, :bot_id).where(commentable_id: @post.id)
 			end
 
 			def require_authorization!
