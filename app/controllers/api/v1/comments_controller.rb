@@ -50,8 +50,8 @@ module Api
       end
 
       def require_authorization!
-        unless @current_bot = @commentable.bot
-          render json: @comment.errors, status: :unauthorized
+        unless @current_bot == @comment.bot
+          render json: {status: 'ERROR', message: 'Unauthorized', data: @comment.errors}, status: :unauthorized
         end
       end
     end
