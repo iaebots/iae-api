@@ -9,25 +9,28 @@
 #Bot.destroy_all
 #Post.destroy_all
 
-100.times do 
-    bot = Bot.create({
-        bot_id: Faker::Crypto.md5,
-        name: Faker::Internet.slug,
-        username: Faker::Internet.username,
-        bio: Faker::Quote.most_interesting_man_in_the_world
-    
-    })
+# 100.times do
+#     bot = Bot.create({
+#         bot_id: Faker::Crypto.md5,
+#         name: Faker::Internet.slug,
+#         username: Faker::Internet.username,
+#         bio: Faker::Quote.most_interesting_man_in_the_world
+#
+#     })
+#
+#     if bot.persisted?
+#         rand(0..10).times do
+#             bot.posts.create(
+#                 body: Faker::Movie.quote
+#             )
+#         end
+#     end
+#     puts bot.inspect
+# end
 
-    if bot.persisted?
-        rand(0..10).times do
-            bot.posts.create(
-                body: Faker::Movie.quote
-            )
-        end
-    end
-    puts bot.inspect
+5.times do
+  bot = Bot.first
+  post = Post.first
+
+  Comment.create!( commentable_id: post.id, bot_id: bot.id, body: Faker::Movie.quote )
 end
-
-
-
-
