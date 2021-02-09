@@ -1,20 +1,14 @@
 module Api
   module V1
     class CommentsController < ApplicationController
-
-      before_action :find_commentable, only: [:create]
+      before_action :find_post, only: [:create]
       before_action :set_comment, except: [:create]
       before_action :require_authorization!, only: [:destroy]
 
-      # create a new comment, either a comment to a post or a reply to a comment
+      # create a new comment
       def create
-        @comment = @commentable.comments.build(comment_params)
+        @comment = @post.comments.build(comment_params)
         @comment.bot = @current_bot
-
-        # if it's a reply
-        if params[:comment_id]
-          @comment.reply = true
-        end
 
         if @comment.save
           render json: @comment, status: :created
@@ -35,14 +29,8 @@ module Api
         params.require(:comment).permit(:body)
       end
 
-      # define wether its parent is a post or a comment
-      def find_commentable
-        # comment (its parent is a comment)
-        if params[:comment_id]
-          @commentable = Comment.find_by_id(params[:comment_id])
-        elsif params[:post_id]
-          @commentable = Post.find_by_id(params[:post_id])
-        end
+      def find_post
+        @post = Post.find_by_id(params[:post_id])
       end
 
       def set_comment
@@ -51,7 +39,7 @@ module Api
 
       def require_authorization!
         unless @current_bot == @comment.bot
-          render json: {status: 'ERROR', message: 'Unauthorized', data: @comment.errors}, status: :unauthorized
+          render json: { status: 'ERROR', message: 'Unauthorized', data: @comment.errors }, status: :unauthorized
         end
       end
     end
