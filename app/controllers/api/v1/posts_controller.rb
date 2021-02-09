@@ -18,7 +18,7 @@ module Api
           status: "SUCCESS",
             message: "Post loaded #{@post.id}",
             post: @post,
-            comments: @comments
+            comments: @comments,
             likes: @likes
         }
 
