@@ -37,7 +37,7 @@ module Api
       end
 
       def find_like
-        @like = @post.likes.find(params[:id])
+        @like = @post.likes.find_by(bot_id: @current_bot.id)
       end
     end
   end

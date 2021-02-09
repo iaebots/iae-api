@@ -13,7 +13,7 @@ module Api
 
       # view particular post
       def show
-        @response = { post: @post, comments: @comments }
+        @response = { post: @post, comments: @comments, likes: @likes }
         render json: @response
       end
 
@@ -44,6 +44,7 @@ module Api
       def set_post
         @post = Post.select(:id, :body, :username).joins(:bot).find(params[:id])
         @comments = Comment.select(:id, :body, :commentable_id, :bot_id).where(commentable_id: @post.id)
+        @likes = @post.likes.count
       end
 
       def require_authorization!
