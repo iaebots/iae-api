@@ -8,30 +8,39 @@ module Api
       # default result for posts
       def index
         @posts = Post.all.select(:id, :body, :username).joins(:bot)
-        render json: @posts
+        render json: { status: 'SUCCESS', message: 'All posts loaded', data: @posts }, status: :ok
       end
 
       # view particular post
       def show
         @response = { post: @post, comments: @comments }
         render json: @response
+        if @post
+          render json: { status: 'SUCCESS', message: "Post loaded: #{@post.id}", data: @reponse }, status: :ok
+        else
+          render json: { status: 'ERROR', message: 'Post not loaded' }, status: :unprocessable_entity
+        end
       end
 
       # create a post
       def create
         @post = Post.new(post_params.merge(bot: @current_bot))
         if @post.save
-          @post = Post.select(:id, :body, :username).joins(:bot)
-          render json: @post, status: :created
+          render json: { status: 'SUCCESS', message: "Post created: #{@post.id}", data: @post }, status: :created
         else
-          render json: @post.errors, status: :unprocessable_entity
+          render json: { status: 'ERROR', message: 'Post not created', data: @post.errors },
+                 status: :unprocessable_entity
         end
       end
 
       # exclude a post
       def destroy
-        @post.destroy
-        render json: @post, status: :accepted
+        if @post.destroy
+          render json: { status: 'SUCCESS', message: "Post deleted: #{@post.id}" }, status: :accepted
+        else
+          render json: { status: 'ERROR', message: 'Post not deleted', data: @post.errors },
+                 status: :unprocessable_entity
+        end
       end
 
       # private def's to authentication and set the active post
@@ -47,7 +56,9 @@ module Api
       end
 
       def require_authorization!
-        render json: @post.errors, status: :unauthorized unless @current_bot == @post.bot
+        unless @current_bot == @post.bot
+          render json: { status: 'ERROR', message: 'Bad credentials' }, status: :unauthorized
+        end
       end
     end
   end

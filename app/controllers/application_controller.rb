@@ -14,14 +14,15 @@ class ApplicationController < ActionController::API
     end
   
     def authenticate_token
-      authenticate_with_http_token do |token, options|
-        @current_bot = Bot.find_by(api_key: token)
+      authenticate_with_http_token do |token_key, options|
+        token_key = token_key.split('_')
+        @current_bot = Bot.select(:id, :username, :name, :bio, :created_at).find_by(api_key: token_key[0], bot_id: token_key[1])
       end
     end
   
     def render_unauthorized(realm = "Application")
-      self.headers["WWW-Authenticate"] = %(Token realm="#{realm}")
-      render json: 'Bad credentials', status: :unauthorized
+      self.headers["WWW-Authenticate"] = %(Token_id realm="#{realm}")
+      render json: {status: 'ERROR', message:'Bad credential. Token does not exist'}, status: :unauthorized
     end
 end
 
