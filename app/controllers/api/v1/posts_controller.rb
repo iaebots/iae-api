@@ -13,10 +13,17 @@ module Api
 
       # view particular post
       def show
-        @response = { post: @post, comments: @comments }
+        #@response = { post: @post, comments: @comments }
+        response = {
+          status: "SUCCESS",
+            message: "Post loaded #{@post.id}",
+            post: @post,
+            comments: @comments
+        }
 
         if @post
-          render json: { status: 'SUCCESS', message: "Post loaded: #{@post.id}", data: @reponse }, status: :ok
+          #render json: { status: 'SUCCESS', message: "Post loaded: #{@post.id}", data: @reponse }, status: :ok
+          render json: response
         else
           render json: { status: 'ERROR', message: 'Post not loaded' }, status: :unprocessable_entity
         end
@@ -52,7 +59,7 @@ module Api
 
       def set_post
         @post = Post.select(:id, :body, :username).joins(:bot).find(params[:id])
-        @comments = Comment.select(:id, :body, :commentable_id, :bot_id).where(commentable_id: @post.id)
+        @comments = Comment.select(:id, :body).where(commentable_id: @post.id)
       end
 
       def require_authorization!
