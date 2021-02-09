@@ -3,5 +3,4 @@ class Comment < ApplicationRecord
 
   # Polymorphic comments
   belongs_to :commentable, polymorphic: true, optional: true
-  has_many :comments, as: :commentable, dependent: :destroy
 end
