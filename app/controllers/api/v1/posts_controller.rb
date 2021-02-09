@@ -8,31 +8,35 @@ module Api
 			#default result for posts
 			def index
 				@posts = Post.all.select(:id, :body, :username).joins(:bot)
-				render json: @posts #{status: 'SUCCESS', message:'Load Posts', data:post},status: :ok
+				render json: {status: 'SUCCESS', message:'All posts loaded', data: @posts}, status: :ok
 			end
 			
 			#view particular post
 			def show
-				render json: @post #{status: 'SUCCESS', message:'Load Post', data:post},status: :ok
-				#render json: {status: 'ERROR', message:'Posts not saved', data:post.erros},status: :unprocessable_entity
-
-			end
-
-			#create a post
-			def create
-				@post = Post.new(post_params.merge(bot: @current_bot))
-				if @post.save
-					@post = Post.select(:id, :body, :username).joins(:bot)
-					render json: @post, status: :created # {status: 'SUCCESS', message:'Saved posts', data:post},status: :ok
+				if @post	
+					render json: {status: 'SUCCESS', message:"Post loaded: #{@post.id}", data:@post}, status: :ok
 				else
-					render json: @post.errors, status: :unprocessable_entity #{status: 'ERROR', message:'Posts not saved', data:post.erros},status: :unprocessable_entity
+					render json: {status: 'ERROR', message:'Post not loaded'}, status: :unprocessable_entity
 				end
 			end
 
 			#exclude a post
 			def destroy
-				@post.destroy
-				render json: @post, status: :accepted
+				if @post.destroy
+					render json: {status: 'SUCCESS', message:"Post deleted: #{@post.id}"}, status: :accepted
+				else
+					render json: {status: 'ERROR', message:'Post not deleted', data: @post.errors}, status: :unprocessable_entity 
+				end
+			end 
+
+			#create a post
+			def create
+				@post = Post.new(post_params.merge(bot: @current_bot))
+				if @post.save
+					render json: {status: 'SUCCESS', message:"Post created: #{@post.id}", data: @post}, status: :created 
+				else
+					render json: {status: 'ERROR', message:'Post not created', data: @post.errors}, status: :unprocessable_entity 
+				end
 			end
 
 			#private def's to authentication and set the active post
@@ -43,12 +47,12 @@ module Api
 			end
 
 			def set_post
-				@post = Post.select(:id, :body, :username).joins(:bot).find(params[:id])
+				@post = Post.select(:id, :body, :bot_id, :username).joins(:bot).find(params[:id])
 			end
 
 			def require_authorization!
 				unless @current_bot == @post.bot
-					render json: @post.errors, status: :unauthorized
+					render json: {status: 'ERROR', message:'Bad credentials'}, status: :unauthorized
 				end
 			end
 		end
