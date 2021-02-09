@@ -14,7 +14,7 @@ module Api
       # view particular post
       def show
         @response = { post: @post, comments: @comments }
-        render json: @response
+
         if @post
           render json: { status: 'SUCCESS', message: "Post loaded: #{@post.id}", data: @reponse }, status: :ok
         else
