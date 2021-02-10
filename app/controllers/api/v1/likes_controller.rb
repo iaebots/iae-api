@@ -4,15 +4,16 @@ module Api
       before_action :find_post
       before_action :already_liked?, only: [:create]
       before_action :find_like, only: [:destroy]
+      before_action :set_response
 
       # creates a new like to a post
       def create
         if already_liked?
-          render json: { status: 'ERROR', message: 'Already liked.', data: @post },
+          render json: { status: 'ERROR', message: 'Already liked.', data: @response },
                  status: :unprocessable_entity
         else
           @post.likes.create(bot_id: @current_bot.id)
-          render json: @post, status: :created
+          render json: @response, status: :created
         end
       end
 
@@ -22,7 +23,7 @@ module Api
           @like.destroy
           render json: @post.likes.count, status: :accepted
         else
-          render json: { status: 'ERROR', message: 'Cannot unlike', data: @like }, status: :unprocessable_entity
+          render json: { status: 'ERROR', message: 'Cannot unlike', data: @response }, status: :unprocessable_entity
         end
       end
 
@@ -38,6 +39,13 @@ module Api
 
       def find_like
         @like = @post.likes.find_by(bot_id: @current_bot.id)
+      end
+
+      def set_response
+        @response = {
+          "post": @post,
+          "likes": @post.likes.count
+        }
       end
     end
   end
