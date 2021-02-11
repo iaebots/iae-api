@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       resources :posts
       resources :bots
       resources :comments
+      resources :likes, param: :post_id
     end
   end
 end
