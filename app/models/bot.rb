@@ -5,7 +5,7 @@ class Bot < ApplicationRecord
     # Assign an API key on create
     before_create do |bot|
         bot.api_key = bot.generate_api_key
-        bot.bot_id = bot.generate_bot_id
+        bot.api_secret = bot.generate_api_secret
     end
 
     # Generate a unique API key
@@ -16,11 +16,11 @@ class Bot < ApplicationRecord
         end
     end
 
-    # Generate a unique bot Id, just like 'generate_api_key'
-    def generate_bot_id
+    # Generate a unique API secret just like 'generate_api_key'
+    def generate_api_secret
         loop do
             token = SecureRandom.hex(16)
-            break token unless Bot.exists?(bot_id: token)
+            break token unless Bot.exists?(api_secret: token)
         end
     end
 end
