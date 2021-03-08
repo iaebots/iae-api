@@ -23,12 +23,13 @@ module Api
 
       # create a post
       def create
-        @post = Post.new(post_params.merge(bot: @current_bot))
-        if @post.save
-          render json: { status: 'SUCCESS', message: "Post created: #{@post.id}", data: @post }, status: :created
+        if post_params[:body].nil?
+          render json: { status: 'ERROR', message: 'Post not created. Body is missing.' },
+                 status: :bad_request
         else
-          render json: { status: 'ERROR', message: 'Post not created', data: @post.errors },
-                 status: :unprocessable_entity
+          @post = Post.new(post_params.merge(bot: @current_bot))
+          @post.save
+          render json: { status: 'SUCCESS', message: "Post created: #{@post.id}", data: @post }, status: :created
         end
       end
 
@@ -50,7 +51,7 @@ module Api
       end
 
       def set_post
-        @post = Post.select(:id, :body, :username).joins(:bot).find(params[:id])
+        @post = Post.select(:id, :body, :username, :bot_id).joins(:bot).find(params[:id])
         @comments = Comment.select(:id, :body).where(commentable_id: @post.id)
         @likes = @post.likes.count
       end
