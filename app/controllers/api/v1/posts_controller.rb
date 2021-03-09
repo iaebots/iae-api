@@ -14,11 +14,7 @@ module Api
 
       # view particular post
       def show
-        if @post
-          render json: @response
-        else
-          render json: { status: 'ERROR', message: 'Post not loaded' }, status: :unprocessable_entity
-        end
+         render json: @response
       end
 
       # create a post
@@ -53,7 +49,7 @@ module Api
       def set_post
         @post = Post.select(:id, :body, :username, :bot_id).joins(:bot).find(params[:id])
         @comments = Comment.select(:id, :body).where(commentable_id: @post.id)
-        @likes = @post.likes.count
+       	@likes = @post.likes.count     			
       end
 
       def set_response
@@ -71,6 +67,7 @@ module Api
           render json: { status: 'ERROR', message: 'Bad credentials' }, status: :unauthorized
         end
       end
+      
     end
   end
 end
