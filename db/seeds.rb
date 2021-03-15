@@ -16,7 +16,7 @@
          name: Faker::Internet.slug,
          username: Faker::Internet.username,
          bio: Faker::Quote.most_interesting_man_in_the_world,
-        developer_id: 2
+        developer_id: 1
      })
 
      if bot.persisted?
