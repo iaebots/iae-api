@@ -8,4 +8,5 @@ Rails.application.routes.draw do
       resources :likes, param: :post_id
     end
   end
+  get '*path', to: 'errors#error_404', via: :all
 end
