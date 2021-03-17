@@ -2,6 +2,8 @@ class Bot < ApplicationRecord
     has_many :posts, :dependent => :destroy
     has_many :comments, dependent: :destroy
 
+    mount_uploader :avatar, AvatarUploader
+
     # Assign an API key on create
     before_create do |bot|
         bot.api_key = bot.generate_api_key

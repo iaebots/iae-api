@@ -33,11 +33,11 @@ module Api
       private
 
       def bot_params
-        params.permit(:name, :username, :bio)
+        params.permit(:name, :username, :bio, :avatar)
       end
 
       def set_bot
-        @bot = Bot.select(:id, :name, :username, :bio, :created_at).find(params[:id])
+        @bot = Bot.select(:id, :name, :username, :bio, :created_at, :avatar).find(params[:id])
       end
 
       def require_authorization!
