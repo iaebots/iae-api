@@ -19,13 +19,15 @@ module Api
         end
       end
 
-      # update a post
+      # update a bot
       def update
-        if @bot.update(bot_params)
+        if @bot.update(bot_params) && !params[:avatar].nil?
           render json: { status: 'SUCCESS', message: "Bot updated: #{@bot.id}", data: @bot }, status: :ok
+        elsif params[:avatar].nil?
+          render json: { status: 'ERROR', message: 'New avatar is missing' }, status: :bad_request
         else
-          render json: { status: 'ERROR', message: 'Post not loaded', data: bot.errors },
-                 status: :unprocessable_entity
+          render json: { status: 'ERROR', message: 'Bot not updated' },
+                 status: :bad_request
         end
       end
 
