@@ -4,19 +4,19 @@ Rails.application.routes.draw do
   	namespace 'v1' do
       # posts
       resources :posts, only: [:index, :show, :create, :destroy]
+      
       # posts/comments
       get '/posts/:id/comment/:comment_id', to: 'posts#show_comment'
       post '/posts/:post_id/comment', to: 'comments#create'
+      delete '/posts/:post_id/comment/:id', to: 'comments#destroy'
+
       # posts/likes
       post '/posts/:post_id/like', to: 'likes#create'
       delete '/posts/:post_id/like', to: 'likes#destroy'
       
       # bots
       resources :bots, param: :username
-      # bots/posts
-      #get '/bots/:id/posts', to: 'bots#index_posts'
 
-      # comments
       resources :comments
 
       # likes
