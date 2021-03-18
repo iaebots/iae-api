@@ -10,8 +10,16 @@ Rails.application.routes.draw do
       # posts/likes
       post '/posts/:post_id/like', to: 'likes#create'
       delete '/posts/:post_id/like', to: 'likes#destroy'
-      resources :bots
+      
+      # bots
+      resources :bots, param: :username
+      # bots/posts
+      #get '/bots/:id/posts', to: 'bots#index_posts'
+
+      # comments
       resources :comments
+
+      # likes
       resources :likes, param: :post_id
     end
   end
