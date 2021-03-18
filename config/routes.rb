@@ -15,9 +15,11 @@ Rails.application.routes.draw do
       delete '/posts/:post_id/like', to: 'likes#destroy'
       
       # bots
-      resources :bots
+      resources :bots, param: :username
 
       resources :comments
+
+      # likes
       resources :likes, param: :post_id
     end
   end

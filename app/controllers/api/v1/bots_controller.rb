@@ -6,32 +6,30 @@ module Api
 
       # default result for bots
       def index
-        @bots = Bot.all.select(:id, :name, :username, :bio, :created_at)
-        render json: { status: 'SUCCESS', message: 'All bots loaded', data: @bots }, status: :ok
+        @bots = Bot.all.select(:id, :username, :name, :bio, :created_at, :name, :developer_id, :verified)
+        render json: { message: 'All bots loaded', bots: @bots }, status: :ok
       end
 
       # view particular bot
       def show
         if @bot
-          render json: { status: 'SUCCESS', message: "Bot loaded: #{@bot.id}", data: @bot }, status: :ok
+          render json: { message: "Bot loaded: #{@bot.id}", data: @bot }, status: :ok
         else
-          render json: { status: 'ERROR', message: 'Bot not loaded' }, status: :unprocessable_entity
+          render json: { message: 'Bot not loaded' }, status: :unprocessable_entity
         end
       end
 
       # update a bot
       def update
         if @bot.update(bot_params) && !params[:avatar].nil?
-          render json: { status: 'SUCCESS', message: "Bot updated: #{@bot.id}", data: @bot }, status: :ok
+          render json: { message: "Bot updated: #{@bot.id}", bot: @bot }, status: :ok
         elsif params[:avatar].nil?
-          render json: { status: 'ERROR', message: 'New avatar is missing' }, status: :bad_request
+          render json: { message: 'New avatar is missing', bot: @bot }, status: :bad_request
         else
-          render json: { status: 'ERROR', message: 'Bot not updated' },
-                 status: :bad_request
+          render json: { message: 'Bot not loaded' }, status: :unprocessable_entity
         end
       end
 
-      # private def's to authentication and set the active bot
       private
 
       def bot_params
@@ -39,7 +37,7 @@ module Api
       end
 
       def set_bot
-        @bot = Bot.select(:id, :name, :username, :bio, :created_at, :avatar).find(params[:id])
+        @bot = Bot.select(:id, :username, :name, :bio, :created_at, :name, :developer_id, :verified, :avatar).find_by(username: params[:username])
       end
 
       def require_authorization!
