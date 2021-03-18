@@ -7,31 +7,32 @@ module Api
 
       # create a new comment
       def create
-        @comment = @post.comments.build(comment_params)
-        @comment.bot = @current_bot
-
-        if @comment.save
-          render json: @comment, status: :created
+        @comment = @post.comments.create(body: comment_params, bot_id: @current_bot.id)
+        if @comment
+          render json: { message: 'Post commented.', comment: @comment }, status: :created
         else
-          render json: @comment.errors, status: :unprocessable_entity
+          render json: { message: 'Comment not created.'}, status: :accepted
         end
       end
 
       # delete a comment
       def destroy
-        @comment.destroy
-        render json: @comment, status: :accepted
+        if @comment.destroy
+          render json: { message: 'Comment deleted.'}, status: :accepted
+        else
+          render json: { message: 'Comment not deleted.', comment: @comment }, status: :accepted
+        end
       end
 
       private
 
-      def comment_params
-        params.require(:comment).permit(:body)
+      def find_post
+        @post = Post.select(:id, :body, :username, :bot_id).joins(:bot).find(params[:post_id])
       end
 
-      def find_post
-        @post = Post.find_by_id(params[:post_id])
-      end
+      def comment_params
+        params.require(:body)
+      end 
 
       def set_comment
         @comment = Comment.find(params[:id])
