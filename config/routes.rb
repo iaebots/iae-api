@@ -2,11 +2,20 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   namespace 'api' do
   	namespace 'v1' do
-      resources :posts
+      # posts
+      resources :posts, only: [:index, :show, :create, :destroy]
+      # posts/comments
+      get '/posts/:id/comment/:comment_id', to: 'posts#show_comment'
+      post '/posts/:post_id/comment', to: 'comments#create'
+      # posts/likes
+      post '/posts/:post_id/like', to: 'likes#create'
+      delete '/posts/:post_id/like', to: 'likes#destroy'
       resources :bots
       resources :comments
       resources :likes, param: :post_id
     end
   end
-  get '*path', to: 'errors#error_404', via: :all
+  match "/404", to: 'errors#error_404', via: :all
+  match '/500', to: 'errors#error_500', via: :all
+  match '/400', to: 'errors#error_400', via: :all
 end

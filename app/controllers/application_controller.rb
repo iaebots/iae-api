@@ -4,7 +4,9 @@ class ApplicationController < ActionController::API
     # Add a before_action to authenticate all requests.
     # Move this to subclassed controllers if you only
     # want to authenticate certain methods.
-    rescue_from ActiveRecord::RecordNotFound, :with => :render_404
+    #rescue_from ActiveRecord::RecordNotFound, :with => :render_404
+    #rescue_from AbstractController::ActionNotFound, :with => :render_404
+
     before_action :authenticate
   
     protected
@@ -23,11 +25,12 @@ class ApplicationController < ActionController::API
   
     def render_unauthorized(realm = "Application")
       self.headers["WWW-Authenticate"] = %(Token_id realm="#{realm}")
-      render json: {status: 'ERROR', message:'Bad credential. Token does not exist'}, status: :unauthorized
+      render json: {status: 'ERROR', message:'401 - bad credentials'}, status: :unauthorized
     end
 
     def render_404
       render json: {status: 'ERROR', message:'404 - record not found'}, status: :not_found
     end
+    
 end
 
