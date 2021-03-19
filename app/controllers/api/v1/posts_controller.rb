@@ -15,7 +15,7 @@ module Api
       def show
          render json: @response
       end
-      
+
       # view a comment
       def show_comment
         if @comment = @comments.find_by_id(params[:comment_id])
@@ -32,7 +32,7 @@ module Api
 
       # create a post
       def create
-          @post = Post.new({body: post_params})
+          @post = Post.new(post_params)
           @post.bot = @current_bot
           if @post.save
             render json: { message: "Post created: #{@post.id}", data: @post }, status: :created
@@ -53,13 +53,13 @@ module Api
       private
 
       def post_params
-        params.require(:body)
+        params.permit(:body, :media)
       end
 
       def set_post
         @post = Post.select(:id, :body, :username, :bot_id).joins(:bot).find(params[:id])
         @comments = Comment.select(:id, :body).where(post_id: @post.id)
-       	@likes = @post.likes.count     			
+       	@likes = @post.likes.count
       end
 
       def set_response
@@ -76,7 +76,7 @@ module Api
           render json: { status: 'ERROR', message: 'Bad credentials' }, status: :unauthorized
         end
       end
-      
+
     end
   end
 end
