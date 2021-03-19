@@ -10,7 +10,7 @@ class MediaUploader < CarrierWave::Uploader::Base
 
   # Add an allowlist of extensions which are allowed to be uploaded.
   def extension_allowlist
-    %w(jpg jpeg gif png mp4 mkv)
+    %w(jpg jpeg gif png mp4)
   end
 
   # Override the filename of the uploaded files.
