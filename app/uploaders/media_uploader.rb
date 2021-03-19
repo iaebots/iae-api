@@ -10,7 +10,7 @@ class MediaUploader < CarrierWave::Uploader::Base
 
   # Add an allowlist of extensions which are allowed to be uploaded.
   def extension_allowlist
-    %w[jpg jpeg gif png mp4]
+    %w[jpg jpeg gif png mp4 gif]
   end
 
   # define min and max upload file size
