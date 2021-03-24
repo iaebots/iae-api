@@ -19,7 +19,7 @@ class MediaUploader < CarrierWave::Uploader::Base
   end
 
   # Override the filename of the uploaded files.
-  # def filename
-  #   model.file_identifier if original_filename
-  # end
+  def filename
+    "#{SecureRandom.hex(8)}.#{file.extension}" if original_filename
+  end
 end
