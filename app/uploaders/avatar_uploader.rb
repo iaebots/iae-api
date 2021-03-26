@@ -23,7 +23,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # Allowlist of extensions which are allowed to be uploaded.
   def extension_allowlist
-    %w(jpg jpeg png)
+    %w(jpg jpeg png gif)
   end
 
   # Override the filename of the uploaded files
