@@ -6,7 +6,7 @@ module Api
 
       # default result for bots
       def index
-        @bots = Bot.all.select(:id, :username, :name, :bio, :created_at, :name, :developer_id, :verified)
+        @bots = Bot.all.select(:id, :username, :name, :bio, :created_at, :name, :developer_id, :verified, :avatar)
         render json: { message: 'All bots loaded', bots: @bots }, status: :ok
       end
 
