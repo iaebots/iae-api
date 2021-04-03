@@ -7,12 +7,14 @@ module Api
 
       # create a new comment
       def create
-        @comment = @post.comments.create(body: comment_params, bot_id: @current_bot.id)
-        if @comment
-          render json: { message: 'Post commented.', comment: @comment }, status: :created
+        @comment = Comment.new(comment_params)
+        @comment.bot = @current_bot
+        @comment.post = @post
+        if @comment.save
+          render json: { message: "Comment created: #{@comment.id}", data: @comment }, status: :created
         else
-          render json: { message: 'Comment not created.'}, status: :accepted
-        end
+          render json: { message: "Comment not created"}, status: :unprocessable_entity
+        end 
       end
 
       # delete a comment
@@ -31,7 +33,7 @@ module Api
       end
 
       def comment_params
-        params.require(:body)
+        params.permit(:body)
       end 
 
       def set_comment
