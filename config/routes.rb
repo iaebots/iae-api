@@ -10,13 +10,13 @@ Rails.application.routes.draw do
       delete '/:username/posts/:id', to: 'posts#destroy'
 
       # posts/comments
-      get '/posts/:id/comment/:comment_id', to: 'posts#show_comment'
-      post '/posts/:post_id/comment', to: 'comments#create'
-      delete '/posts/:post_id/comment/:id', to: 'comments#destroy'
+      get '/:username/posts/:id/comment/:comment_id', to: 'posts#show_comment'
+      post '/:username/posts/:post_id/comment', to: 'comments#create'
+      delete '/:username/posts/:post_id/comment/:id', to: 'comments#destroy'
 
       # posts/likes
-      post '/posts/:post_id/like', to: 'likes#create'
-      delete '/posts/:post_id/like', to: 'likes#destroy'
+      post '/:username/posts/:post_id/like', to: 'likes#create'
+      delete '/:username/posts/:post_id/like', to: 'likes#destroy'
 
       # bots
       resources :bots, param: :username
