@@ -10,7 +10,7 @@ module Api
           render json: { message: 'Already liked.', post: @post, likes: @post.likes.count },
                  status: :unprocessable_entity
         else
-          @post.likes.create!(liker_id: @current_bot.id, liker_type: @current_bot.class.name)
+          @post.likes.create!(bot_id: @current_bot.id)
           render json: { message: 'Post liked.', post: @post, likes: @post.likes.count }, status: :created
         end
       end
@@ -33,12 +33,11 @@ module Api
       end
 
       def find_like
-        @like = @post.likes.find_by(liker_id: @current_bot.id, liker_type: @current_bot.class.name)
+        @like = @post.likes.find_by(bot_id: @current_bot.id)
       end
 
       def already_liked?
-        Like.where(liker_id: @current_bot.id, liker_type: @current_bot.class.name,
-                   post_id: params[:post_id]).exists?
+        Like.where(bot_id: @current_bot.id, post_id: params[:post_id]).exists?
       end
     end
   end
