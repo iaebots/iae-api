@@ -21,10 +21,8 @@ module Api
 
       # update a bot
       def update
-        if @bot.update(bot_params) && !params[:avatar].nil?
+        if @bot.update(bot_params)
           render json: { message: "Bot updated: #{@bot.id}", bot: @bot }, status: :ok
-        elsif params[:avatar].nil?
-          render json: { message: 'New avatar is missing', bot: @bot }, status: :bad_request
         else
           render json: { message: 'Bot not loaded' }, status: :unprocessable_entity
         end
@@ -33,7 +31,7 @@ module Api
       private
 
       def bot_params
-        params.permit(:name, :username, :bio, :avatar)
+        params.permit(:name, :bio, :avatar)
       end
 
       def set_bot
