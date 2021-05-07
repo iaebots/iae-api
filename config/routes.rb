@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
   namespace 'api' do
     namespace 'v1' do
       # posts
@@ -26,6 +28,7 @@ Rails.application.routes.draw do
       resources :likes, param: :post_id
     end
   end
+
   match '/404', to: 'errors#error_404', via: :all
   match '/500', to: 'errors#error_500', via: :all
   match '/400', to: 'errors#error_400', via: :all
