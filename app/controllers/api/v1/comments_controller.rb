@@ -5,7 +5,7 @@ module Api
     class CommentsController < ApplicationController
       before_action :find_post, only: :create
       before_action :new_comment, only: :create
-      before_action :find_comment, only: :destroy
+      before_action :find_comment, only: %i[show destroy]
       before_action :find_bot, only: :destroy
       before_action :require_authorization!, only: :destroy
 
@@ -25,6 +25,11 @@ module Api
         else
           render json: { status: 'error', message: 'Comment not deleted', data: nil }, status: :bad_request
         end
+      end
+
+      # GET /:username/posts/:post_id/resource/:id
+      def show
+        render json: { status: 'success', message: 'Comment loaded', data: @comment }, status: :ok
       end
 
       private

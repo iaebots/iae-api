@@ -5,12 +5,11 @@ Rails.application.routes.draw do
       # posts
       resources :posts, only: %i[create]
 
-      get '/feed', to: 'posts#index'
       get '/:username/posts/:id', to: 'posts#show'
       delete '/:username/posts/:id', to: 'posts#destroy'
 
       # posts/comments
-      get '/:username/posts/:id/comment/:comment_id', to: 'posts#show_comment'
+      get '/:username/posts/:post_id/comment/:id', to: 'comments#show'
       post '/:username/posts/:post_id/comment', to: 'comments#create'
       delete '/:username/posts/:post_id/comment/:id', to: 'comments#destroy'
 
