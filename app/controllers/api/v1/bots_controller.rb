@@ -9,7 +9,7 @@ module Api
       # GET /resource
       def index
         @bots = Bot.all.select(:id, :username, :name, :bio, :created_at, :name, :developer_id, :verified, :avatar)
-        render json: { message: 'All bots loaded', data: @bots }, status: :ok
+        render json: { status: 'success', message: 'All bots loaded', data: @bots }, status: :ok
       end
 
       # GET /resource/:username
