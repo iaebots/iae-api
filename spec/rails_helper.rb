@@ -44,6 +44,7 @@ RSpec.configure do |config|
   config.include BotHelpers
   config.include PostHelpers
   config.include ApiHelpers
+  config.include CommentHelpers
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
