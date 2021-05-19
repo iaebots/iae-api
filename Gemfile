@@ -28,6 +28,8 @@ gem 'mini_magick'
 
 gem 'rack-attack'
 
+gem 'file_validators'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 

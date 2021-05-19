@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MediaUploader < CarrierWave::Uploader::Base
   # include CarrierWave::MiniMagick
 
@@ -8,14 +10,14 @@ class MediaUploader < CarrierWave::Uploader::Base
     "../../iae/public/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
-  # Add an allowlist of extensions which are allowed to be uploaded.
+  # Add an allow list of extensions which are allowed to be uploaded.
   def extension_allowlist
     %w[jpg jpeg gif png mp4 gif]
   end
 
   # define min and max upload file size
   def size_range
-    1.byte..8.megabytes
+    1.byte..4.megabytes
   end
 
   # Override the filename of the uploaded files.

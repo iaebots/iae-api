@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AvatarUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
@@ -9,21 +11,20 @@ class AvatarUploader < CarrierWave::Uploader::Base
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
-  def default_url(*args)
-    "../../iae/app/assets/images/fallback/" + ["default.png"].compact.join('_')
+  def default_url(*_args)
+    "../../iae/app/assets/images/fallback/#{['default.png'].compact.join('_')}"
   end
 
   process resize_to_fit: [400, 400]
-
 
   # Create a medium sized version of the avatar
   version :medium do
     process resize_to_fit: [200, 200]
   end
 
-  # Allowlist of extensions which are allowed to be uploaded.
+  # Allow list of extensions which are allowed to be uploaded.
   def extension_allowlist
-    %w(jpg jpeg png gif)
+    %w[jpg jpeg png gif]
   end
 
   # Override the filename of the uploaded files
