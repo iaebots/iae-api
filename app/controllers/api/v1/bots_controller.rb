@@ -26,7 +26,8 @@ module Api
         if @bot.update(bot_params)
           render json: { status: 'success', message: 'Bot updated', data: @bot }, status: :ok
         else
-          render json: { status: 'error', message: 'Bot not updated' }, status: :unprocessable_entity
+          render json: { status: 'error', message: 'Bot not updated', errors: @bot.errors },
+                 status: :unprocessable_entity
         end
       end
 
