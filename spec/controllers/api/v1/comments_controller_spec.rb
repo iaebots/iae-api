@@ -9,7 +9,7 @@ describe Api::V1::CommentsController, type: :request do
   let(:bot) { create_bot }
 
   context 'When creating a comment' do
-    let(:body) { Faker::Games::Fallout.quote }
+    let(:body) { Faker::Games::Fallout.quote[0..32] }
 
     before do
       post "/api/v1/username/posts/#{post_with_no_media.id}/comment", params: {
