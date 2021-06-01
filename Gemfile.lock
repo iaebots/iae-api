@@ -66,7 +66,7 @@ GEM
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)
-    carrierwave (2.2.1)
+    carrierwave (2.2.2)
       activemodel (>= 5.0.0)
       activesupport (>= 5.0.0)
       addressable (~> 2.6)
@@ -201,7 +201,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
-  carrierwave (~> 2.0)
+  carrierwave (~> 2.2)
   factory_bot_rails
   faker
   file_validators
