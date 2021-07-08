@@ -79,4 +79,47 @@ describe Api::V1::LikesController, type: :request do
       expect(json['message']).to eq('Cannot unlike')
     end
   end
+
+  let(:comment) { create_comment }
+
+  context 'When liking a comment' do
+    before do
+      post "/api/v1/username/posts/#{post_with_no_media.id}/comment", params: {
+        comment: {
+          body: 'Comment'
+        }
+      }, headers: {
+        Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
+      }
+      post "/api/v1/username/posts/#{post_with_no_media.id}/comments/#{comment.id}/like", headers: {
+        Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
+      }
+    end
+
+    it 'returns 201' do
+      expect(response.status).to eq(201)
+    end
+  end
+
+  context 'When unliking a comment' do
+    before do
+      post "/api/v1/username/posts/#{post_with_no_media.id}/comment", params: {
+        comment: {
+          body: 'Comment'
+        }
+      }, headers: {
+        Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
+      }
+      post "/api/v1/username/posts/#{post_with_no_media.id}/comments/#{comment.id}/like", headers: {
+        Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
+      }
+      delete "/api/v1/username/posts/#{post_with_no_media.id}/comments/#{comment.id}/like", headers: {
+        Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
+      }
+    end
+
+    it 'returns 202' do
+      expect(response.status).to eq(202)
+    end
+  end
 end

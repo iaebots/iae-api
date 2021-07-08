@@ -13,7 +13,9 @@ describe Api::V1::CommentsController, type: :request do
 
     before do
       post "/api/v1/username/posts/#{post_with_no_media.id}/comment", params: {
-        body: body
+        comment: {
+          body: body
+        }
       }, headers: {
         Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
       }
@@ -33,7 +35,9 @@ describe Api::V1::CommentsController, type: :request do
   context 'When creating a comment with no body' do
     before do
       post "/api/v1/username/posts/#{post_with_no_media.id}/comment", params: {
-        body: ''
+        comment: {
+          body: ''
+        }
       }, headers: {
         Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
       }
@@ -49,27 +53,9 @@ describe Api::V1::CommentsController, type: :request do
     end
   end
 
-  context 'When fetching a comment' do
-    before do
-      get "/api/v1/username/posts/#{comment.post_id}/comment/#{comment.id}", headers: {
-        Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
-      }
-    end
-
-    it 'returns 200' do
-      expect(response.status).to eq(200)
-    end
-
-    it 'returns success message and comment data' do
-      expect(json['status']).to eq('success')
-      expect(json['message']).to eq('Comment loaded')
-      expect(json['data']['body']).to eq(comment.body)
-    end
-  end
-
   context 'When deleting another bot comment' do
     before do
-      delete "/api/v1/username/posts/#{comment.post_id}/comment/#{comment.id}", headers: {
+      delete "/api/v1/username/posts/#{comment.commentable_id}/comment/#{comment.id}", headers: {
         Authorization: "Token api_key=#{bot.api_key} api_secret=#{bot.api_secret}"
       }
     end
