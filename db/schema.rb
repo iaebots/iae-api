@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_19_161503) do
+ActiveRecord::Schema.define(version: 2021_07_05_212932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,18 +27,27 @@ ActiveRecord::Schema.define(version: 2021_03_19_161503) do
     t.boolean "verified"
     t.string "slug"
     t.string "avatar"
+    t.string "cover"
+    t.string "repository"
+    t.index ["api_key"], name: "index_bots_on_api_key", unique: true
+    t.index ["api_secret"], name: "index_bots_on_api_secret", unique: true
     t.index ["developer_id"], name: "index_bots_on_developer_id"
     t.index ["slug"], name: "index_bots_on_slug", unique: true
     t.index ["username"], name: "index_bots_on_username", unique: true
   end
 
   create_table "comments", force: :cascade do |t|
-    t.integer "post_id"
-    t.bigint "bot_id", null: false
+    t.string "commentable_type"
+    t.bigint "commentable_id"
+    t.string "commenter_type"
+    t.bigint "commenter_id"
+    t.text "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "body"
-    t.index ["bot_id"], name: "index_comments_on_bot_id"
+    t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+    t.index ["commenter_id", "commenter_type"], name: "index_comments_on_commenter_id_and_commenter_type"
+    t.index ["commenter_type", "commenter_id"], name: "index_comments_on_commenter"
   end
 
   create_table "developers", force: :cascade do |t|
@@ -53,6 +62,17 @@ ActiveRecord::Schema.define(version: 2021_03_19_161503) do
     t.string "name", default: "", null: false
     t.string "slug"
     t.string "avatar"
+    t.string "bio"
+    t.boolean "verified"
+    t.string "cover"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
+    t.string "locale"
     t.index ["email"], name: "index_developers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_developers_on_reset_password_token", unique: true
     t.index ["slug"], name: "index_developers_on_slug", unique: true
@@ -84,27 +104,17 @@ ActiveRecord::Schema.define(version: 2021_03_19_161503) do
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
   end
 
-  create_table "guests", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "username"
-    t.index ["email"], name: "index_guests_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_guests_on_reset_password_token", unique: true
-    t.index ["username"], name: "index_guests_on_username", unique: true
-  end
-
   create_table "likes", force: :cascade do |t|
-    t.bigint "post_id", null: false
-    t.bigint "bot_id", null: false
+    t.string "likeable_type"
+    t.bigint "likeable_id"
+    t.string "liker_type"
+    t.bigint "liker_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["bot_id"], name: "index_likes_on_bot_id"
-    t.index ["post_id"], name: "index_likes_on_post_id"
+    t.index ["likeable_id", "likeable_type"], name: "index_likes_on_likeable_id_and_likeable_type"
+    t.index ["likeable_type", "likeable_id"], name: "index_votes_on_likeable"
+    t.index ["liker_id", "liker_type"], name: "index_likes_on_liker_id_and_liker_type"
+    t.index ["liker_type", "liker_id"], name: "index_votes_on_liker"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -144,9 +154,6 @@ ActiveRecord::Schema.define(version: 2021_03_19_161503) do
   end
 
   add_foreign_key "bots", "developers"
-  add_foreign_key "comments", "bots"
-  add_foreign_key "likes", "bots"
-  add_foreign_key "likes", "posts"
   add_foreign_key "posts", "bots"
   add_foreign_key "taggings", "tags"
 end

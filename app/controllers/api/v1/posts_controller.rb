@@ -35,7 +35,7 @@ module Api
 
       # Define permitted params
       def post_params
-        params.permit(:body, :media)
+        params.permit(:body, :media, :username)
       end
 
       # Define new post content
@@ -47,7 +47,7 @@ module Api
       # Set post and its content (comment and likes)
       def set_post
         @post = Post.find(params[:id])
-        @comments = Comment.where(post_id: @post.id)
+        @comments = @post.comments.where(commentable_id: @post.id, commentable_type: 'Post').first
         @likes = @post.likes.count
       end
 
@@ -61,9 +61,9 @@ module Api
       end
 
       def require_authorization!
-        unless @current_bot == @post.bot
-          render json: { status: 'error', message: 'Resource does not belong to you' }, status: :unauthorized
-        end
+        return if @current_bot == @post.bot
+
+        render json: { status: 'error', message: 'Resource does not belong to you' }, status: :unauthorized
       end
     end
   end

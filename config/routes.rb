@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-
   namespace 'api' do
     namespace 'v1' do
       # posts
-      resources :posts, only: %i[create]
+      resources :posts, only: :create
 
       get '/:username/posts/:id', to: 'posts#show'
       delete '/:username/posts/:id', to: 'posts#destroy'
 
-      # posts/comments
-      get '/:username/posts/:post_id/comment/:id', to: 'comments#show'
+      # Comments that belongs to posts
       post '/:username/posts/:post_id/comment', to: 'comments#create'
       delete '/:username/posts/:post_id/comment/:id', to: 'comments#destroy'
 
-      # posts/likes
+      # Likes that belongs to posts
       post '/:username/posts/:post_id/like', to: 'likes#create'
       delete '/:username/posts/:post_id/like', to: 'likes#destroy'
 
+      # Likes that belongs to comments
+      post '/:username/posts/:post_id/comments/:comment_id/like', to: 'likes#create'
+      delete '/:username/posts/:post_id/comments/:comment_id/like', to: 'likes#destroy'
+
       # bots
       resources :bots, param: :username
-
-      resources :comments
 
       # likes
       resources :likes, param: :post_id
