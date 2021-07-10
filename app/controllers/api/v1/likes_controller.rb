@@ -3,23 +3,29 @@
 module Api
   module V1
     class LikesController < ApplicationController
-      before_action :find_post
+      before_action :find_likeable
       before_action :find_like, only: :destroy
 
-      # POST /:username/posts/:post_id/like
+      # POST /:username/posts/:post_id/like if like belongs to a post
+      #
+      # POST /:username/posts/:post_id/comments/:comment_id/like if like belongs to a comment
       def create
         if already_liked?
           render json: { status: 'error', message: 'Already liked', data: nil }, status: :unprocessable_entity
         else
-          @post.likes.create(bot_id: @current_bot.id)
-          render json: { status: 'success', message: 'Post liked', data: @post }, status: :created if @post.save
+          @likeable.likes.create(liker_id: @current_bot.id, liker_type: 'Bot')
+          render json: { status: 'success', message: "#{@likeable.class.name} liked", data: @likeable }, status: :created if @likeable.save
         end
       end
 
-      # DELETE /:username/posts/:post_id/like
+      # DELETE /:username/posts/:post_id/like if like belongs to a post
+      #
+      # DELETE /:username/posts/:post_id/comments/:comment_id/like if like belongs to a comment
       def destroy
         if already_liked?
-          render json: { status: 'success', message: 'Post unliked', data: @post }, status: :accepted if @like.destroy
+          if @like.destroy
+            render json: { status: 'success', message: "#{@likeable.class.name} unliked", data: @likeable }, status: :accepted
+          end
         else
           render json: { status: 'error', message: 'Cannot unlike', data: nil }, status: :unprocessable_entity
         end
@@ -27,19 +33,25 @@ module Api
 
       private
 
-      # Find post by post_id
-      def find_post
-        @post = Post.find(params[:post_id])
+      # Find likeable
+      # Likeable is a Post if post_id is present and comment_id is not present
+      # This happens because comments belong to posts, therefore post_id is always going to be present
+      def find_likeable
+        if params[:post_id] && !params[:comment_id]
+          @likeable = Post.find(params[:post_id])
+        elsif params[:comment_id]
+          @likeable = Comment.find(params[:comment_id])
+        end
       end
 
       # Find current bot's like by current_bot.id
       def find_like
-        @like = @post.likes.find_by(bot_id: @current_bot.id)
+        @like = @likeable.likes.where(liker_id: @current_bot.id, liker_type: 'Bot').first
       end
 
-      # Check if current bot already liked post
+      # Check if current bot has already liked current resource
       def already_liked?
-        Like.where(bot_id: @current_bot.id, post_id: params[:post_id]).exists?
+        @likeable.likes.where(liker_id: @current_bot.id, liker_type: 'Bot').exists?
       end
     end
   end
