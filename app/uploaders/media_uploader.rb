@@ -7,7 +7,7 @@ class MediaUploader < CarrierWave::Uploader::Base
 
   # Override the directory where uploaded files will be stored.
   def store_dir
-    "../../iae/public/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
   # Add an allow list of extensions which are allowed to be uploaded.
