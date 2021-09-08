@@ -99,7 +99,7 @@ GEM
     jsonapi-rspec (0.0.11)
       rspec-core
       rspec-expectations
-    listen (3.6.0)
+    listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     loofah (2.12.0)
@@ -206,7 +206,7 @@ DEPENDENCIES
   faker
   file_validators
   jsonapi-rspec
-  listen (~> 3.6)
+  listen (~> 3.7)
   mini_magick
   pg (~> 1.1)
   puma (~> 5.4)
