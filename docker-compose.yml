@@ -1,0 +1,14 @@
+version: '3.2'
+
+networks:
+    default:
+        external:
+          name: iae_network
+services:
+    api:
+        image: iae:p1.0
+        ports:
+            - 3001:3000
+        volumes:
+            - .:/app
+        env_file: .env
