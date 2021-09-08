@@ -7,12 +7,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # Override the directory where uploaded files will be stored.
   def store_dir
-    "../../iae/public/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-  end
-
-  # Provide a default URL as a default if there hasn't been a file uploaded:
-  def default_url(*_args)
-    "../../iae/app/assets/images/fallback/#{['default.png'].compact.join('_')}"
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
   process resize_to_fit: [400, 400]
