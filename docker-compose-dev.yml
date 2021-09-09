@@ -19,6 +19,7 @@ services:
             - DATABASE_HOST=db
             - DATABASE_NAME=iae_development
             - RAILS_ENV=development
+            - REDIS_URL_CACHING=redis://redis:6379/0
 volumes:
     db_data:
     node_modules:
