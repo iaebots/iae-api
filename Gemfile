@@ -30,6 +30,18 @@ gem 'rack-attack'
 
 gem 'file_validators'
 
+gem 'redis'
+
+gem 'shrine', '~> 3.0'
+
+gem 'image_processing', '~> 1.8'
+
+gem 'sidekiq', '~> 6.1', '>= 6.1.2'
+
+gem 'marcel'
+
+gem 'fastimage'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 
