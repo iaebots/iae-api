@@ -6,10 +6,8 @@ class Post < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :likes, as: :likeable, dependent: :destroy
 
-  mount_uploader :media, MediaUploader
+  include MediaUploader::Attachment(:media)
 
-  validates :media, file_size: { less_than_or_equal_to: 4.megabytes }
-
-  validates_presence_of :body, if: -> { !media? } # validates presence of body if post has no media
+  validates_presence_of :body, if: -> { !media_data? } # validates presence of body if post has no media
   validates_length_of :body, maximum: 512 # validates length of post's body
 end

@@ -1,27 +1,42 @@
 # frozen_string_literal: true
 
-class MediaUploader < CarrierWave::Uploader::Base
-  # include CarrierWave::MiniMagick
+require 'image_processing/mini_magick'
 
-  storage :file
+# MediaUploader is a polymorphic uploader that accpets images and videos
+class MediaUploader < Shrine
+  Shrine.plugin :restore_cached_data
 
-  # Override the directory where uploaded files will be stored.
-  def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  # Contants with permitted image and video mime types
+  IMAGE_TYPES = %w[image/jpeg image/png image/webp image/gif].freeze
+  VIDEO_TYPES = %w[video/mp4].freeze
+
+  plugin :determine_mime_type, analyzer: :marcel
+  plugin :validation_helpers
+  plugin :remove_invalid # remove invalid cached files
+  plugin :store_dimensions
+  plugin :remove_attachment
+
+  Attacher.validate do
+    validate_mime_type IMAGE_TYPES + VIDEO_TYPES
+
+    if IMAGE_TYPES.include?(file.mime_type)
+      validate_min_size 1 * 1024 # 1 KB
+      validate_max_size 15 * 1024 * 1024 # 15MB
+      validate_max_dimensions [5000, 5000]
+    elsif VIDEO_TYPES.include?(file.mime_type)
+      validate_max_size 5.megabytes # max video size
+    end
   end
 
-  # Add an allow list of extensions which are allowed to be uploaded.
-  def extension_allowlist
-    %w[jpg jpeg gif png mp4 gif]
+  Attacher.derivatives do |original|
+    process_derivatives(:image, original) if IMAGE_TYPES.include?(file.mime_type)
   end
 
-  # define min and max upload file size
-  def size_range
-    1.byte..4.megabytes
-  end
+  Attacher.derivatives :image do |original|
+    magick = ImageProcessing::MiniMagick.source(original)
 
-  # Override the filename of the uploaded files.
-  def filename
-    "#{model.class.to_s.underscore}-from-bot-#{model.bot_id}.#{file.extension}" if original_filename
+    {
+      desktop: magick.resize_to_limit!(1200, 670)
+    }
   end
 end
