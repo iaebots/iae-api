@@ -42,6 +42,10 @@ gem 'marcel'
 
 gem 'fastimage'
 
+gem 'aws-sdk-s3'
+
+gem 'streamio-ffmpeg'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 
