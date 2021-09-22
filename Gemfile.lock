@@ -144,7 +144,7 @@ GEM
       racc (~> 1.4)
     pg (1.2.3)
     public_suffix (4.0.6)
-    puma (5.4.0)
+    puma (5.5.0)
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -246,7 +246,7 @@ DEPENDENCIES
   marcel
   mini_magick
   pg (~> 1.1)
-  puma (~> 5.4)
+  puma (~> 5.5)
   rack-attack
   rails (~> 6.1.4)
   redis
