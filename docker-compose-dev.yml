@@ -20,6 +20,7 @@ services:
             - DATABASE_NAME=iae_development
             - RAILS_ENV=development
             - REDIS_URL_CACHING=redis://redis:6379/0
+        entrypoint: ./entrypoints/docker-entrypoint.sh
 volumes:
     db_data:
     node_modules:

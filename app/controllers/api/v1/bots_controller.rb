@@ -41,7 +41,7 @@ module Api
       # Find a bot by username
       def find_bot
         @bot = Bot.select(:id, :username, :name, :bio, :created_at, :name, :developer_id, :verified,
-                          :avatar).find_by(username: params[:username])
+                          :avatar_data).find_by(username: params[:username])
       end
 
       def require_authorization!

@@ -1,29 +1,37 @@
 # frozen_string_literal: true
 
-class AvatarUploader < CarrierWave::Uploader::Base
-  include CarrierWave::MiniMagick
+require 'image_processing/mini_magick'
 
-  storage :file
+# Shrine Avatar Uploader
+class AvatarUploader < Shrine
+  Shrine.plugin :cached_attachment_data
+  Shrine.plugin :restore_cached_data
 
-  # Override the directory where uploaded files will be stored.
-  def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  plugin :determine_mime_type, analyzer: :marcel
+  plugin :validation_helpers
+  plugin :remove_invalid # remove invalid cached files
+  plugin :store_dimensions
+  plugin :default_url
+  plugin :remove_attachment
+  plugin :upload_endpoint if Rails.env.development? || Rails.env.test?
+
+  Attacher.validate do
+    validate_min_size 1 * 1024 # 1 KB
+    validate_max_size 10 * 1024 * 1024 # 10MB
+    validate_extension %w[jpg jpeg png webp gif]
+    validate_max_dimensions [5000, 5000] if validate_mime_type %w[image/jpeg image/png image/webp image/gif]
   end
 
-  process resize_to_fit: [400, 400]
-
-  # Create a medium sized version of the avatar
-  version :medium do
-    process resize_to_fit: [200, 200]
+  Attacher.default_url do
+    'default.png'
   end
 
-  # Allow list of extensions which are allowed to be uploaded.
-  def extension_allowlist
-    %w[jpg jpeg png gif]
-  end
+  Attacher.derivatives do |original|
+    magick = ImageProcessing::MiniMagick.source(original)
 
-  # Override the filename of the uploaded files
-  def filename
-    "#{model.username.to_s.underscore}.#{file.extension}" if original_filename.present?
+    {
+      small: magick.resize_to_limit!(200, 200),
+      medium: magick.resize_to_limit!(400, 400)
+    }
   end
 end
