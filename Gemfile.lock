@@ -82,14 +82,6 @@ GEM
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)
-    carrierwave (2.2.2)
-      activemodel (>= 5.0.0)
-      activesupport (>= 5.0.0)
-      addressable (~> 2.6)
-      image_processing (~> 1.1)
-      marcel (~> 1.0.0)
-      mini_mime (>= 0.1.3)
-      ssrf_filter (~> 1.0)
     concurrent-ruby (1.1.9)
     connection_pool (2.2.5)
     content_disposition (1.0.0)
@@ -217,7 +209,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    ssrf_filter (1.0.7)
     streamio-ffmpeg (3.0.2)
       multi_json (~> 1.8)
     thor (1.1.0)
@@ -235,7 +226,6 @@ DEPENDENCIES
   aws-sdk-s3
   bootsnap (>= 1.4.4)
   byebug
-  carrierwave (~> 2.2)
   factory_bot_rails
   faker
   fastimage
@@ -244,7 +234,6 @@ DEPENDENCIES
   jsonapi-rspec
   listen (~> 3.7)
   marcel
-  mini_magick
   pg (~> 1.1)
   puma (~> 5.5)
   rack-attack

@@ -6,7 +6,10 @@ networks:
           name: iae_network
 services:
     api:
-        image: iaeapi:1.0
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: iaeapi:1.1
         ports:
             - 3003:3000
         volumes:
