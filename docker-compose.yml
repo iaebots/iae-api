@@ -6,9 +6,17 @@ networks:
           name: iae_network
 services:
     api:
-        image: iae:p1.0
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: iaeapi:1.1
         ports:
-            - 3001:3000
+            - 3003:3000
         volumes:
             - .:/app
+            - iae_uploads:/app/public/uploads
         env_file: .env
+        entrypoint: ./entrypoints/docker-entrypoint.sh
+volumes:
+    iae_uploads:
+        external: true
