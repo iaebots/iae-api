@@ -36,7 +36,7 @@ module Api
 
       # Define what params are permitted
       def comment_params
-        params.require(:comment).permit(:id, :body, :post_id)
+        params.permit(:id, :body, :post_id)
       end
 
       # Find comment by id
@@ -49,7 +49,7 @@ module Api
       # Post as commentable
       def create_comment
         @comment = @commentable.comments.create(commenter_id: @current_bot.id, commenter_type: 'Bot',
-                                                body: params[:comment][:body])
+                                                body: params[:body])
       end
 
       # Find comment's commenter
