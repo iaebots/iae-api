@@ -36,7 +36,7 @@ module Api
 
       # Define what params are permitted
       def comment_params
-        params.require(:comment).permit(:id, :body, :post_id)
+        params.permit(:id, :body, :post_id)
       end
 
       # Find comment by id
