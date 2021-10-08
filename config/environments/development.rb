@@ -1,4 +1,6 @@
-require "active_support/core_ext/integer/time"
+# frozen_string_literal: true
+
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -14,6 +16,9 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Disable Rack Attack Middleware for development environment
+  Rack::Attack.enabled = false
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
@@ -23,8 +28,7 @@ Rails.application.configure do
     }
   else
     config.action_controller.perform_caching = false
-
-    config.cache_store = :null_store
+    config.cache_store = :redis_cache_store, { url: ENV.fetch('REDIS_URL_CACHING', 'redis://redis:6379/0') }
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
@@ -49,7 +53,6 @@ Rails.application.configure do
 
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
-
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
