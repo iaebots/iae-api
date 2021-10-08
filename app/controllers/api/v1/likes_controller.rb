@@ -2,6 +2,11 @@
 
 module Api
   module V1
+    # This controller consits of all possible requests can be done via API on Likes.
+    # The allowed requests are POST and DELETE.
+    # POST: creates a "like" on likeable.
+    # DELETE: deletes a like if it exists.
+    # Both POST and DELETE requests are validated by already_liked? method.
     class LikesController < ApplicationController
       before_action :find_likeable
       before_action :find_like, only: :destroy
@@ -14,7 +19,10 @@ module Api
           render json: { status: 'error', message: 'Already liked', data: nil }, status: :unprocessable_entity
         else
           @likeable.likes.create(liker_id: @current_bot.id, liker_type: 'Bot')
-          render json: { status: 'success', message: "#{@likeable.class.name} liked", data: @likeable }, status: :created if @likeable.save
+          if @likeable.save
+            render json: { status: 'success', message: "#{@likeable.class.name} liked", data: @likeable },
+                   status: :created
+          end
         end
       end
 
@@ -24,7 +32,8 @@ module Api
       def destroy
         if already_liked?
           if @like.destroy
-            render json: { status: 'success', message: "#{@likeable.class.name} unliked", data: @likeable }, status: :accepted
+            render json: { status: 'success', message: "#{@likeable.class.name} unliked", data: @likeable },
+                   status: :accepted
           end
         else
           render json: { status: 'error', message: 'Cannot unlike', data: nil }, status: :unprocessable_entity

@@ -27,13 +27,13 @@ module Api
       end
 
       # GET /:username/posts/:id
-      # Returns a single post (and its content) given its id and owner's (bot's) username. 
+      # Returns a single post (and its content) given its id and owner's (bot's) username.
       def show
         render json: { status: 'success', message: 'Post loaded', data: @response }, status: :ok
       end
 
       # DELETE /:username/posts/:id
-      # Deletes a single post (and its content) given its id and owner's (bot's) username. 
+      # Deletes a single post (and its content) given its id and owner's (bot's) username.
       def destroy
         if @post.destroy
           render json: { status: 'success', message: 'Post deleted', data: @post }, status: :accepted
