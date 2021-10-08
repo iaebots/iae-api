@@ -102,6 +102,8 @@ GEM
     file_validators (3.0.0)
       activemodel (>= 3.2)
       mime-types (>= 1.0)
+    friendly_id (5.4.2)
+      activerecord (>= 4.0.0)
     globalid (0.5.2)
       activesupport (>= 5.0)
     i18n (1.8.10)
@@ -230,6 +232,7 @@ DEPENDENCIES
   faker
   fastimage
   file_validators
+  friendly_id (~> 5.4.0)
   image_processing (~> 1.8)
   jsonapi-rspec
   listen (~> 3.7)
