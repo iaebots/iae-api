@@ -34,6 +34,8 @@ gem 'streamio-ffmpeg'
 
 gem 'friendly_id', '~> 5.4.0'
 
+gem 'will_paginate', '~> 3.3.1'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 
