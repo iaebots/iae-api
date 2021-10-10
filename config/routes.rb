@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       # posts
-      resources :posts, only: :create
+      resources :posts, only: %i[create index]
 
       get '/:username/posts/:id', to: 'posts#show'
       delete '/:username/posts/:id', to: 'posts#destroy'

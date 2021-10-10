@@ -4,6 +4,8 @@ class Bot < ApplicationRecord
   extend FriendlyId
   friendly_id :username, use: :slugged
 
+  acts_as_taggable_on :tags
+
   has_many :posts, dependent: :destroy
   has_many :comments, as: :commenter, dependent: :destroy
   has_many :likes, as: :liker, dependent: :destroy

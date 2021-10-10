@@ -4,7 +4,8 @@ module Api
   module V1
     # This controller consits of all possible requests can be done via API on Posts.
     # The allowed requests are GET, POST and DELETE.
-    # GET: return a single post, containing its comments and likes, given its id and its owner's (bot's) username.
+    # GET (index): returns all posts with given tag, paginated. 
+    # GET (show): return a single post, containing its comments and likes, given its id and its owner's (bot's) username.
     # POST: create a post given a body and/or media.
     # DELETE: deletes a post.
     # DELETE requests are validated by require_authorization! method.
@@ -13,6 +14,7 @@ module Api
       before_action :require_authorization!, only: :destroy
       before_action :set_response, only: :show
       before_action :new_post, only: :create
+      before_action :find_post_with_tag, only: :index
 
       # POST /posts
       # Creates a post given a body and/or media. Body is optional if media is present.
@@ -23,6 +25,18 @@ module Api
         else
           render json: { status: 'error', message: 'Post not created', errors: @post.errors.full_messages },
                  status: :bad_request
+        end
+      end
+
+      # GET /posts
+      # Returns all posts whose owners (bots) contain tag provided as param
+      # If no post is found, returns a JSON with null data
+      def index
+        if @response
+          render json: { status: 'sucess', message: 'Posts loaded', data: @response }, status: :ok
+        else
+          render json: { status: 'error', message: 'No post found with that tag or no tag provided', data: nil },
+                 status: :ok
         end
       end
 
@@ -58,7 +72,7 @@ module Api
 
       # Finds post and its content (comment and likes) by its id and owner's (bot's) username.
       def find_post
-        @post = Post.joins(:bot).where("bots.username = '#{params[:username]}'").select('posts.id, posts.body,
+        @post = Post.joins(:bot).where('bots.username = ?', params[:username]).select('posts.id, posts.body,
                                         bots.id as bot_id, bots.username as bot_username, posts.media_data,
                                         posts.created_at').find(params[:id])
         @comments = @post.comments.where(commentable_id: @post.id, commentable_type: 'Post')
@@ -66,14 +80,51 @@ module Api
         @likes = @post.likes.count
       end
 
+      # Finds all posts whose owners (bots) contain the tag provided as param
+      def find_post_with_tag
+        return unless params[:tag_name] # returns if no tag_name is provided
+
+        find_bot_with_tag
+        return if @bots.nil? # returns if no bot with that tag was found
+
+        posts ||= []
+        @bots.find_each do |bot|
+          posts << bot.posts # appends all posts to @posts list
+        end
+
+        # paginate posts and select fields to show on response
+        posts = posts.first.paginate(page: params[:page], per_page: max_page)
+                     .select(:id, :bot_id, :body, :media_data, :created_at)
+
+        @response = { posts: posts, total_pages: posts.total_pages }
+      end
+
+      # Finds all bots that contains provided tag name
+      def find_bot_with_tag
+        @bots = Bot.joins(:tags).where('tags.name = ?', params[:tag_name])
+      end
+
       # Set a response for GET /:username/posts/:id
       # The responde contains the post data and its content (comments and likes).
       def set_response
+        @comments = @comments.paginate(page: params[:page], per_page: max_page)
         @response = {
           post: @post,
           comments: @comments,
+          total_pages: @comments.total_pages,
           likes: @likes
         }
+      end
+
+      # Checks if max_page param is present and is smaller than 16
+      # If present and smaller than 16, returns params[:max_page]
+      # Else, returns default 16 as max_page
+      def max_page
+        if params[:max_page] && params[:max_page].to_i < 16
+          params[:max_page]
+        else
+          16
+        end
       end
 
       # Checks if bot requesting DELETE owns the post before action. Otherwise returns 401.
