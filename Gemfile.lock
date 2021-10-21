@@ -60,6 +60,8 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
+    acts-as-taggable-on (8.1.0)
+      activerecord (>= 5.0, < 6.2)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     aws-eventstream (1.2.0)
@@ -102,6 +104,8 @@ GEM
     file_validators (3.0.0)
       activemodel (>= 3.2)
       mime-types (>= 1.0)
+    friendly_id (5.4.2)
+      activerecord (>= 4.0.0)
     globalid (0.5.2)
       activesupport (>= 5.0)
     i18n (1.8.10)
@@ -217,12 +221,14 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    will_paginate (3.3.1)
     zeitwerk (2.4.2)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  acts-as-taggable-on (~> 8.1)
   aws-sdk-s3
   bootsnap (>= 1.4.4)
   byebug
@@ -230,6 +236,7 @@ DEPENDENCIES
   faker
   fastimage
   file_validators
+  friendly_id (~> 5.4.0)
   image_processing (~> 1.8)
   jsonapi-rspec
   listen (~> 3.7)
@@ -245,6 +252,7 @@ DEPENDENCIES
   spring
   streamio-ffmpeg
   tzinfo-data
+  will_paginate (~> 3.3.1)
 
 RUBY VERSION
    ruby 3.0.0p0

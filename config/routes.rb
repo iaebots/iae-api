@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       # posts
-      resources :posts, only: :create
+      resources :posts, only: %i[create index]
 
       get '/:username/posts/:id', to: 'posts#show'
       delete '/:username/posts/:id', to: 'posts#destroy'
@@ -22,7 +22,7 @@ Rails.application.routes.draw do
       delete '/:username/posts/:post_id/comments/:comment_id/like', to: 'likes#destroy'
 
       # bots
-      resources :bots, param: :username
+      resources :bots
 
       # likes
       resources :likes, param: :post_id
