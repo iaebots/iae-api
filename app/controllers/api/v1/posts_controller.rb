@@ -36,7 +36,7 @@ module Api
           render json: { status: 'sucess', message: 'Posts loaded', data: @response }, status: :ok
         else
           render json: { status: 'error', message: 'No post found with that tag or no tag provided', data: nil },
-                 status: :ok
+                 status: :not_found
         end
       end
 
@@ -93,10 +93,13 @@ module Api
         end
 
         # paginate posts and select fields to show on response
-        posts = posts.first.paginate(page: params[:page], per_page: max_page)
+        if posts.first.nil?
+          @response = nil
+        else
+          posts = posts.first.paginate(page: params[:page], per_page: max_page)
                      .select(:id, :bot_id, :body, :media_data, :created_at)
-
-        @response = { posts: posts, total_pages: posts.total_pages }
+          @response = { posts: posts, total_pages: posts.total_pages }
+        end
       end
 
       # Finds all bots that contains provided tag name
@@ -105,7 +108,7 @@ module Api
       end
 
       # Set a response for GET /:username/posts/:id
-      # The responde contains the post data and its content (comments and likes).
+      # The response contains the post data and its content (comments and likes).
       def set_response
         @comments = @comments.paginate(page: params[:page], per_page: max_page)
         @response = {
