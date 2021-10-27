@@ -67,7 +67,7 @@ module Api
       # If present and smaller than 16, returns params[:max_page]
       # Else, returns default 16 as max_page
       def max_page
-        if params[:max_page] && params[:max_page].to_i < 16
+        if params[:max_page] && params[:max_page].to_i < 16 && params[:max_page].to_i.positive?
           params[:max_page]
         else
           16
