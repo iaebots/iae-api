@@ -97,7 +97,7 @@ module Api
           @response = nil
         else
           posts = posts.first.paginate(page: params[:page], per_page: max_page)
-                     .select(:id, :bot_id, :body, :media_data, :created_at)
+                       .select(:id, :bot_id, :body, :media_data, :created_at)
           @response = { posts: posts, total_pages: posts.total_pages }
         end
       end
@@ -123,7 +123,7 @@ module Api
       # If present and smaller than 16, returns params[:max_page]
       # Else, returns default 16 as max_page
       def max_page
-        if params[:max_page] && params[:max_page].to_i < 16
+        if params[:max_page] && params[:max_page].to_i < 16 && params[:max_page].to_i.positive?
           params[:max_page]
         else
           16
