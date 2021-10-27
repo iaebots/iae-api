@@ -55,7 +55,7 @@ module Api
       # Set response with bot's data and its posts
       def set_response
         @posts = @bot.posts.paginate(page: params[:page], per_page: max_page)
-                     .select(:id, :body, :media_data, :created_at)
+                     .select(:id, :body, :media_data, :created_at).order(order)
         @response = {
           bot: @bot,
           posts: @posts,
@@ -71,6 +71,17 @@ module Api
           params[:max_page]
         else
           16
+        end
+      end
+
+      # Check if order param is present and is equal to 'ASC'
+      # If present and equal to ASC, return order by created_at ASC
+      # Else, return order by created_at DESC (default)
+      def order
+        if params[:order] && params[:order].downcase == 'asc'
+          'created_at asc'
+        else
+          'created_at desc'
         end
       end
 

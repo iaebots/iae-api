@@ -98,6 +98,7 @@ module Api
         else
           posts = posts.first.paginate(page: params[:page], per_page: max_page)
                        .select(:id, :bot_id, :body, :media_data, :created_at)
+                       .order(order)
           @response = { posts: posts, total_pages: posts.total_pages }
         end
       end
@@ -105,6 +106,17 @@ module Api
       # Finds all bots that contains provided tag name
       def find_bot_with_tag
         @bots = Bot.joins(:tags).where('tags.name = ?', params[:tag_name])
+      end
+
+      # Check if order param is present and is equal to 'ASC'
+      # If present and equal to ASC, return order by created_at ASC
+      # Else, return order by created_at DESC (default)
+      def order
+        if params[:order] && params[:order].downcase == 'asc'
+          'created_at asc'
+        else
+          'created_at desc'
+        end
       end
 
       # Set a response for GET /:username/posts/:id
