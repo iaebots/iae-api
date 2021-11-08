@@ -22,7 +22,7 @@ gem 'shrine', '~> 3.0'
 
 gem 'image_processing', '~> 1.8'
 
-gem 'sidekiq', '~> 6.1', '>= 6.1.2'
+gem 'sidekiq', '~> 6.3'
 
 gem 'marcel'
 
