@@ -6,7 +6,7 @@ ruby '3.0.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.4'
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.1'
+gem 'pg', '~> 1.3'
 # Use Puma as the app server
 gem 'puma', '~> 5.5'
 # Reduces boot times through caching; required in config/boot.rb
@@ -36,7 +36,7 @@ gem 'friendly_id', '~> 5.4.0'
 
 gem 'will_paginate', '~> 3.3.1'
 
-gem 'acts-as-taggable-on', '~> 8.1'
+gem 'acts-as-taggable-on', '~> 9.0'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
