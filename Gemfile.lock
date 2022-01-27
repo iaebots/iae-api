@@ -60,8 +60,8 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    acts-as-taggable-on (8.1.0)
-      activerecord (>= 5.0, < 6.2)
+    acts-as-taggable-on (9.0.1)
+      activerecord (>= 6.0, < 7.1)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     aws-eventstream (1.2.0)
@@ -108,7 +108,7 @@ GEM
       activerecord (>= 4.0.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    i18n (1.8.11)
+    i18n (1.9.0)
       concurrent-ruby (~> 1.0)
     image_processing (1.12.1)
       mini_magick (>= 4.9.5, < 5)
@@ -132,7 +132,7 @@ GEM
     mime-types-data (3.2021.1115)
     mini_magick (4.11.0)
     mini_mime (1.1.2)
-    minitest (5.14.4)
+    minitest (5.15.0)
     msgpack (1.4.4)
     multi_json (1.15.0)
     nio4r (2.5.8)
@@ -222,13 +222,13 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     will_paginate (3.3.1)
-    zeitwerk (2.5.1)
+    zeitwerk (2.5.3)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  acts-as-taggable-on (~> 8.1)
+  acts-as-taggable-on (~> 9.0)
   aws-sdk-s3
   bootsnap (>= 1.4.4)
   byebug
