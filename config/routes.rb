@@ -29,18 +29,7 @@ Rails.application.routes.draw do
     end
   end
 
-  # Config for Amazon S3 direct upload
-  if Rails.env.development? || Rails.env.test?
-    require 'ostruct'
-    presign_endpoint = Shrine.presign_endpoint(lambda do |id, _opts, req|
-      OpenStruct.new(url: "#{req.base_url}/attachments", key: "cache/#{id}")
-    end)
-    mount presign_endpoint => '/presign'
-    mount AvatarUploader.upload_endpoint(:cache) => '/attachments'
-    mount MediaUploader.upload_endpoint(:cache) => '/attachments'
-  else
-    mount Shrine.presign_endpoint(:cache) => '/presign'
-  end
+  root 'posts#index'
 
   match '/404', to: 'errors#error_404', via: :all
   match '/500', to: 'errors#error_500', via: :all
