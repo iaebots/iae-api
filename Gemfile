@@ -28,8 +28,6 @@ gem 'marcel'
 
 gem 'fastimage'
 
-gem 'aws-sdk-s3'
-
 gem 'streamio-ffmpeg'
 
 gem 'friendly_id', '~> 5.4.0'

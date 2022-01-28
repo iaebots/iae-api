@@ -9,9 +9,9 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        image: iaeapi:1.1
+        image: iaeapi:tecc1.0
         ports:
-            - 3003:3000
+            - 3001:3000
         volumes:
             - .:/app
             - iae_uploads:/app/public/uploads
