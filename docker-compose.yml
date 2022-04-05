@@ -9,7 +9,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        image: iaeapi:1.1
+        image: iaeapi:1.3
         ports:
             - 3003:3000
         volumes:
